@@ -1,12 +1,9 @@
 # Non-Blocking Code
 
-This is a custom (soldered) ATmega8 setup with **nonblocking code** to test common sensors DS18B20 and DHT11/22 with a small 128x64 power-economic 
-SSD1306 monitor which provides 8 lines each with 21 symbol.
+This is a custom (manually soldered) ATmega8 board setup with **nonblocking code** to test common sensors DS18B20 and DHT11/22 with a 128x64 pixel SSD1306 OLED display. The latter provides 8 lines of text, each with 21 symbol.
 
 This code might save someone time in finding the correct libs and fitting everything into 5-6KB. Notice that many sensor 
-libs use direct datasheet codes which are only preliminary guidelines. They are not suitable for reality yet as they 
-are blocking and often deadlocking. **Places with bugs: Check for any code with "while(something)" that does not bail out after 
-a fixed number of retries**.
+libs use direct datasheet codes which are only preliminary guidelines as they are blocking and often deadlocking. Beware of any sensor code with "while(something)" that does not bail out after a fixed number of retries.
 
 <table>
 <tr>
@@ -32,7 +29,7 @@ a fixed number of retries**.
 
 # Settings
 
-The fuse bits are set in Makefile such that the clock is internal 1MHz (default), USBasp ISP programmer is employed.
+Fuse bits are set in Makefile such that the clock is internal 1MHz (default), USBasp ISP programmer is employed.
 
 The electric circuit diagram is not provided here, but it is similar to this excellent work:
 
@@ -57,9 +54,9 @@ done with [C++ and metaprogramming][pin-metaprogramming-C++].
 
 # Licenses
 
-Regarding proper licenses, unfortunately [SSD1306] and [I2C] have none, but this should not be a problem. It is amazing that these libs do the job and fit into 5KB, but I do not generally recommend using a display monitor with such tiny devices other than for occasional testing of sensors. Displaying negative floats or changing fonts might get tricky and SSD1306 seems to be used with bigger libs and Raspberry Pi boards that have megabytes of RAM. 
+Regarding proper licenses, unfortunately [SSD1306] and [I2C] have none, but this should not be a problem. It is amazing that these libs do the job and fit into 5KB, but I do not generally recommend using a display with such tiny devices other than for occasional testing of sensors. Displaying negative floats or changing fonts might get tricky and SSD1306 seems to be used with bigger libs and Raspberry Pi boards that have megabytes of RAM. 
 
-The DS18B20 part is based on a modified old code whose source I can no longer find on github, but see [AVRThermostat-MIT] for the MIT licensed DS18B20 code which also seems to be non-blocking. The DHT code that I use is [DHT22-GPL3], but there is a fairly similar code [DHT22-MIT] which is also supporting both, DHT11 and DHT22 sensors and is also non-blocking. Notably, when using [DHT22-GPL3] with the DHT22 sensor one has to divide the read temperature and humidity values by ten in order to get correct integer value, while the case of DHT11 does the division internally!
+The DS18B20 part is based on a modified old code whose source I can no longer find on github, but see [AVRThermostat-MIT] for the MIT licensed DS18B20 code which also seems to be non-blocking. The DHT code that I use is [DHT22-GPL3], but there is a fairly similar code [DHT22-MIT] which is also supporting both, DHT11 and DHT22 sensors and is also non-blocking. Notably, when using [DHT22-GPL3] with the DHT22 sensor one has to divide the final temperature and humidity values by ten in order to get the correct integer values, while the case of DHT11 does the division internally!
 
 The file main.c uses a few common pin management macros whose source I can no longer trace back.
 
@@ -67,11 +64,13 @@ In addition to licenses, for massive commercial production one might even need t
 
 # To Do
 
-Try to communicate between PC and ATmega8 based on USB and the in-software UART as in 
+Instead of a display consider sending messages between PC and ATmega8 based on USB and the in-software UART as in 
 
 [https://github.com/toma3757/ATtiny25-DS18B20-UART](https://github.com/toma3757/ATtiny25-DS18B20-UART)
 
-This might allow avoiding any display monitors, their drivers and communication libraries. Notice that monitoring is useful and sometimes LED blinking is not a sufficient "printf", e.g. seeing if the read temperature value needs a division by ten. Negative temperature values seem to be supported in these codes, but I have not tested this scenario, see [DHT22-negative-temperatures] with the links on how this is done on the Arduino side.
+This might allow avoiding any display monitors, their drivers and communication libraries. 
+
+Negative temperature values seem to be supported in the codes provided here, but I have not tested this scenario, see [DHT22-negative-temperatures] with the links to how this is done with Arduino.
 
 # References
 
