@@ -40,33 +40,38 @@ The electric circuit diagram is not provided here, but it is similar to this exc
 
 The sensor and monitor wiring is the following:
 
-- SSD1306 - SCL PC5, SDA - PC4 (no freedom (!), this uses an internal I2C circuitry in ATmega8). 
-- DS18B20 - PD3. 
-- DHT22 - PD2, modify however you like in DHT.h.
+- SSD1306: SCL - PC5, SDA - PC4 (no freedom (!), this uses an internal I2C circuitry in ATmega8). 
+- DS18B20: PD3. 
+- DHT22: PD2, modify however you like in DHT.h.
+- Output:  PB0 (see "#define OutX B,0" in main.c).
 
 If you want to change the DS18B20 port letter, just search and replace PORTD, DDRD, PIND in
 ds18b20nonblocking.c. The pin number is set in main.c:
-
 ```
 //DS18b20 is pinned on PD3:
 tempS = read_temperature_ds18b20(3);
 ```
-
 This is useful if multiple DS18B20 sensors are to be added later without the need of their complex ROM 
 address scanning. Pinning several sensors on different port letters is not recommended, but this can be 
 done with [C++ and metaprogramming][pin-metaprogramming-C++].
+
+# Licenses
 
 Regarding proper licenses, unfortunately [SSD1306] and [I2C] have none, but this should not be a problem. It is amazing that these libs do the job and fit into 5KB, but I do not generally recommend using a display monitor with such tiny devices other than for occasional testing of sensors. Displaying negative floats or changing fonts might get tricky and SSD1306 seems to be used with bigger libs and Raspberry Pi boards that have megabytes of RAM. 
 
 The DS18B20 part is based on a modified old code whose source I can no longer find on github, but see [AVRThermostat-MIT] for the MIT licensed DS18B20 code which also seems to be non-blocking. The DHT code that I use is [DHT22-GPL3], but there is a fairly similar code [DHT22-MIT] which is also supporting both, DHT11 and DHT22 sensors and is also non-blocking. Notably, when using [DHT22-GPL3] with the DHT22 sensor one has to divide the read temperature and humidity values by ten in order to get correct integer value, while the case of DHT11 does the division internally!
 
+The file main.c uses a few common pin management macros whose source I can no longer trace back.
+
 In addition to licenses, for massive commercial production one might even need to consider authenticity at the hardware levels, see e.g. [counterfeit_DS18B20]; something similar might be going on with Digispark clones or just about any such device.
 
-To Do: Try to communicate between PC and ATmega8 based on USB and the in-software UART as in 
+# To Do
+
+Try to communicate between PC and ATmega8 based on USB and the in-software UART as in 
 
 [https://github.com/toma3757/ATtiny25-DS18B20-UART](https://github.com/toma3757/ATtiny25-DS18B20-UART)
 
-This might allow avoiding any display monitors and their libraries. Notice that monitoring is useful and sometimes LED blinking is not a sufficient "printf", e.g. seeing if the read temperature value needs a division by ten. Negative temperature values seem to be supported in these codes, but I have not tested this scenario.
+This might allow avoiding any display monitors, their drivers and communication libraries. Notice that monitoring is useful and sometimes LED blinking is not a sufficient "printf", e.g. seeing if the read temperature value needs a division by ten. Negative temperature values seem to be supported in these codes, but I have not tested this scenario, see [DHT22-negative-temperatures] with the links on how this is done on the Arduino side.
 
 # References
 
@@ -77,6 +82,7 @@ This might allow avoiding any display monitors and their libraries. Notice that 
 - [AVRThermostat-MIT]
 - [pin-metaprogramming-C++]
 - [counterfeit_DS18B20]
+- [DHT22-negative-temperatures]
 - [atmega8]
 
 [SSD1306]: https://github.com/Preston-Sundar/AVR-OLED-SSD1306-IIC-DRIVER
@@ -92,6 +98,8 @@ This might allow avoiding any display monitors and their libraries. Notice that 
 [pin-metaprogramming-C++]: https://github.com/ricardocosme/ds18b20
 
 [counterfeit_DS18B20]: https://github.com/cpetrich/counterfeit_DS18B20
+
+[DHT22-negative-temperatures]: https://forum.arduino.cc/t/dht22-negative-celsius-temperatures/126814/14
 
 [atmega8]: https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-2486-8-bit-AVR-microcontroller-ATmega8_L_datasheet.pdf
 
