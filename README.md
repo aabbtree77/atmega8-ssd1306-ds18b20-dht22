@@ -50,7 +50,9 @@ tempS = read_temperature_ds18b20(3);
 ```
 This is useful if multiple DS18B20 sensors are to be added later without the need of their complex ROM 
 address scanning. Pinning several sensors on different port letters is not recommended, but this can be 
-done with [C++ and metaprogramming][pin-metaprogramming-C++].
+done with [C++ and metaprogramming][pin-metaprogramming-C++] at the cost of a huge jump in debugging complexity. 
+
+If multiple sensors need to be wired on the same pin, it might be better to use the ESP instead of ATmega, see e.g. [this MicroPython tutorial][ROM address scanning with ESP and MicroPython]. Beware that the ESP12 is terrible at networking or more complex apps due to insufficient RAM, but it could be quite optimal for exactly this specific problem or some mild hobby ADC as it will be much quicker and easier to use MicroPython with built-in tested libs instead of searching for bare C codes on github. 
 
 # Licenses
 
@@ -83,6 +85,7 @@ Negative temperature values seem to be supported in the codes provided here, but
 - [counterfeit_DS18B20]
 - [DHT22-negative-temperatures]
 - [atmega8]
+- [ROM address scanning with ESP and MicroPython]
 
 [SSD1306]: https://github.com/Preston-Sundar/AVR-OLED-SSD1306-IIC-DRIVER
 
@@ -101,5 +104,7 @@ Negative temperature values seem to be supported in the codes provided here, but
 [DHT22-negative-temperatures]: https://forum.arduino.cc/t/dht22-negative-celsius-temperatures/126814/14
 
 [atmega8]: https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-2486-8-bit-AVR-microcontroller-ATmega8_L_datasheet.pdf
+
+[ROM address scanning with ESP and MicroPython]: https://randomnerdtutorials.com/micropython-ds18b20-esp32-esp8266
 
 
