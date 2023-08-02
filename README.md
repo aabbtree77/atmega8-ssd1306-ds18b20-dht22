@@ -1,9 +1,9 @@
 # Non-Blocking Code
 
-This is a custom (manually soldered) ATmega8 board setup with **nonblocking code** to test common sensors DS18B20 and DHT11/22 with a 128x64 pixel SSD1306 OLED display. The latter provides 8 lines of text, each with 21 symbol.
+This is a custom (manually soldered) ATmega8 board setup with **nonblocking code** to test common sensors DS18B20 and DHT11/22 with a 128x64 pixel SSD1306 OLED display. The latter provides 8 lines of text, each with 21 symbols.
 
 This code might save someone time in finding the correct libs and fitting everything into 5-6KB. Notice that many sensor 
-libs use direct datasheet codes which are only preliminary guidelines as they are blocking and often deadlocking. Beware of any sensor code with "while(something)" that does not bail out after a fixed number of retries.
+libs use direct datasheet demo codes which may block the rest of the code execution or even get stuck in an infinite loop. Beware of any sensor code with "while(something)" that does not bail out after a fixed number of retries.
 
 <table>
 <tr>
@@ -54,15 +54,15 @@ done with [C++ and metaprogramming][pin-metaprogramming-C++].
 
 # Licenses
 
-Regarding proper licenses, unfortunately [SSD1306] and [I2C] have none, but this should not be a problem. It is amazing that these libs do the job and fit into 5KB, but I do not generally recommend using a display with such tiny devices other than for occasional testing of sensors. Displaying negative floats or changing fonts might get tricky and SSD1306 seems to be used with bigger libs and Raspberry Pi boards that have megabytes of RAM. 
+Regarding proper licenses, beware that [SSD1306] and [I2C] have none of them. It is amazing that these libs do the job and fit into 5KB, but I do not generally recommend using a display with such tiny devices other than for occasional testing of sensors. Displaying negative floats or changing fonts might get tricky.
 
-The DS18B20 part is based on a modified old code whose source I can no longer find on github, but see [AVRThermostat-MIT] for the MIT licensed DS18B20 code which also seems to be non-blocking. The DHT code that I use is [DHT22-GPL3], but there is a fairly similar code [DHT22-MIT] which is also supporting both, DHT11 and DHT22 sensors and is also non-blocking. Notably, when using [DHT22-GPL3] with the DHT22 sensor one has to divide the final temperature and humidity values by ten in order to get the correct integer values, while the case of DHT11 does the division internally!
+The DS18B20 part is based on a modified old code whose source I can no longer find on github, but see [AVRThermostat-MIT] for the MIT licensed DS18B20 code which also seems to be non-blocking. The DHT code that I use is [DHT22-GPL3], but there is a fairly similar code [DHT22-MIT] which is also supporting both, DHT11 and DHT22 sensors and is also non-blocking. Notably, when using [DHT22-GPL3] with the DHT22 sensor one has to divide the final temperature and humidity values by ten in order to get the correct integer values, while the case of DHT11 does the division internally.
 
-The file main.c uses a few common pin management macros whose source I can no longer trace back.
+main.c uses a few common pin management macros whose source I can no longer trace back.
 
-In addition to licenses, for massive commercial production one might even need to consider authenticity at the hardware levels, see e.g. [counterfeit_DS18B20]; something similar might be going on with Digispark clones or just about any such device.
+In addition to licenses, for massive commercial production one might even need to consider authenticity at the hardware levels, see e.g. [counterfeit_DS18B20].
 
-# To Do
+# Todo (Or Not)
 
 Instead of a display consider sending messages between PC and ATmega8 based on USB and the in-software UART as in 
 
